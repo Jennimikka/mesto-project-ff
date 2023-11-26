@@ -44,7 +44,7 @@ function handleFormProfileSubmit(evt) {
 profileNameValue.textContent = profileNameInput.value;
 profileDescriptionValue.textContent = profileDescriptionInput.value;
 closeModal(popupTypeProfile)
-    
+evt.target.reset(); 
 }
 
 formElementProfile.addEventListener('submit', handleFormProfileSubmit)
