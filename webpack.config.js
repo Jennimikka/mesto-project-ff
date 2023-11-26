@@ -12,7 +12,7 @@ module.exports = {
 
   entry: { 
 
-    main: './scripts/index.js' 
+    main: './src/scripts/index.js' 
 
   }, 
 
@@ -110,7 +110,7 @@ module.exports = {
 
     new HtmlWebpackPlugin({ 
 
-      template: './index.html' 
+      template: './src/index.html' 
 
     }), 
 

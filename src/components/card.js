@@ -1,10 +1,6 @@
-import '../pages/index.css'; 
-import { initialCards } from './cards';
-// @todo: Темплейт карточки
+import { template, popupTypeImage, openModal } from "../scripts";
 
-const containerEl = document.querySelector('.places__list');
-const template = document.querySelector('#card-template').content;
-const createCardByTamplate = (item) => {
+export const createCardByTamplate = (item) => {
     const el = template.querySelector('.card').cloneNode(true);
     const elTitle = el.querySelector('.card__title');
     elTitle.textContent = item.name;
@@ -16,6 +12,17 @@ const createCardByTamplate = (item) => {
         evt.target.classList.toggle('card__like-button_is-active')
 
     })
+
+    elImg.addEventListener('click', function(){
+        openModal(popupTypeImage)
+        const imgCaption = document.querySelector('.popup__caption');
+        const imgLink = document.querySelector('.popup__image');
+        imgLink.src = elImg.src;
+        imgLink.name = elImg.name;
+        imgCaption.textContent = elTitle.textContent; 
+        
+    })
+
     const deleteBtn = el.querySelector('.card__delete-button');
     function removeItem(evt){
         evt.target.closest('.card').remove();
@@ -24,23 +31,3 @@ const createCardByTamplate = (item) => {
     return el;
 
 }
-const render = () => { 
-
-    initialCards.forEach((item) => { 
-
-        containerEl.append(createCardByTamplate(item)); 
-
-    }); 
-
-}; 
-
-render(); 
-
-
-// @todo: DOM узлы
-
-// @todo: Функция создания карточки
-
-// @todo: Функция удаления карточки
-
-// @todo: Вывести карточки на страницу
