@@ -5,7 +5,7 @@ import { createCardByTamplate, openImage,  likeCard, removeItem } from '../compo
 import { popupTypeProfile, popupTypeCard, popupTypeImage, profileEditButton, addButton, closeButton, containerEl, template, profileNameInput, profileDescriptionInput, profileNameValue,  profileDescriptionValue, popup, formElementProfile, formElementCard, cardNameInput, cardUrlInput } from '../components/constants.js'
 const render = () => { 
     initialCards.forEach((item) => { 
-        containerEl.append(createCardByTamplate(item)); 
+        containerEl.append(createCardByTamplate(item, openImage, likeCard, removeItem)); 
     }); 
 }; 
 

@@ -9,22 +9,20 @@ export const createCardByTamplate = (item, openImage, likeCard, removeItem) => {
     elImg.src = item.link;
     elImg.alt = item.name;
     const elLike = el.querySelector('.card__like-button');
-    console.log(elLike)
     elLike.addEventListener('click', likeCard);
     elImg.addEventListener('click', () => {
-        openImage(imgLink, imgCaption)
-    });
+        openImage(item, imgCaption)});
     const deleteBtn = el.querySelector('.card__delete-button');    
     deleteBtn.addEventListener('click', removeItem);
     return el;
    
 
 }
-console.log(openImage)
-export function openImage(imgLink, imgCaption) {   
-    item.link = imgLink;
-    item.name = imgCaption;
-    imgCaption.textContent = elTitle.textContent; 
+
+export function openImage(item) {   
+    imgLink.src = item.link;
+    imgCaption.alt = item.name;
+    imgCaption.textContent = item.name;
     openModal(popupTypeImage)
     
 }
