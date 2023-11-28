@@ -11,7 +11,7 @@ export const createCardByTamplate = (item, openImage, likeCard, removeItem) => {
     const elLike = el.querySelector('.card__like-button');
     elLike.addEventListener('click', likeCard);
     elImg.addEventListener('click', () => {
-        openImage(item, imgCaption)});
+        openImage(item)});
     const deleteBtn = el.querySelector('.card__delete-button');    
     deleteBtn.addEventListener('click', removeItem);
     return el;
@@ -21,7 +21,7 @@ export const createCardByTamplate = (item, openImage, likeCard, removeItem) => {
 
 export function openImage(item) {   
     imgLink.src = item.link;
-    imgCaption.alt = item.name;
+    imgLink.alt = item.name;
     imgCaption.textContent = item.name;
     openModal(popupTypeImage)
     
