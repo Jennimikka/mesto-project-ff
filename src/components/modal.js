@@ -20,23 +20,13 @@ function handleEscClose(el) {
     }
 }
 
-const closeOverlay = document.querySelectorAll('.popup')
-    closeOverlay.forEach(item => {
-        const popup = item.closest('.popup');
-        item.addEventListener('click', (evt) => { 
-            if(evt.currentTarget === evt.target){
-            closeModal(popup)
-            }
-    });    
-})
-
-
-const closeButtons = document.querySelectorAll('.popup__close'); 
-closeButtons.forEach((item) => { 
-    const popup = item.closest('.popup');
-    item.addEventListener('click', () => {
-        closeModal(popup) 
-    }); 
+const popups = document.querySelectorAll('.popup'); 
+popups.forEach((popup) => {
+ popup.addEventListener('click', (evt) => {
+  if (evt.target === evt.currentTarget || evt.target.classList.contains('popup__close')){
+   closeModal(popup);
+  }
+ });
 }); 
 
-export {openModal, closeModal, closeOverlay }
+export { openModal, closeModal }
