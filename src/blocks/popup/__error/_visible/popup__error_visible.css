@@ -1,0 +1,25 @@
+.popup__error_visible {
+    display: block;
+    flex-direction: column;
+   
+    color: rgba(255, 0, 0, 1);
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    border-bottom: none;
+    max-width: 358px;
+    min-height: 12px;
+    
+    
+}
+ 
+
+ 
+
+.popup__error_visible:last-of-type { 
+
+    margin-top: 8px; 
+
+   } 

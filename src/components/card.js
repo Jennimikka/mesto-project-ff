@@ -12,8 +12,16 @@ export const createCardByTamplate = (item, openImage, likeCard, removeItem) => {
     elLike.addEventListener('click', likeCard);
     elImg.addEventListener('click', () => {
         openImage(item)});
-    const deleteBtn = el.querySelector('.card__delete-button');    
-    deleteBtn.addEventListener('click', removeItem);
+        const deleteBtn = el.querySelector('.card__delete-button');   
+    if(item.owner._id  == '9340354ff2504a42f96423f0') {
+        //Показываем кнопку удаления   
+        deleteBtn.style.display ='block';
+        deleteBtn.addEventListener('click', removeItem);
+        deleteBtn.dataset.id = item._id;
+    }  else {
+        deleteBtn.style.display ='none';
+    }
+
     return el;
    
 
@@ -33,5 +41,6 @@ export function likeCard (evt) {
 }
 
 export function removeItem(evt) {
-    evt.target.closest('.card').remove();
+    console.log(evt.target.dataset.id)
+    //evt.target.closest('.card').remove();
 }
