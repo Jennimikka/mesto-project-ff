@@ -1,9 +1,5 @@
-
-const formEl = document.querySelector('.popup__form');
 const inputEl = document.querySelector('.popup__input');
-const errorEl = document.querySelector(`.${inputEl.id}-error`);
 
-  
 
   export const showInputError = (formEl, inputEl, errorMessage) => {
     const errorEl = formEl.querySelector(`#${inputEl.id}-error`);
@@ -26,6 +22,7 @@ const errorEl = document.querySelector(`.${inputEl.id}-error`);
       inputEl.setCustomValidity(inputEl.dataset.errorMessage);
     } else {
       inputEl.setCustomValidity("");
+      hideInputError(formEl, inputEl);
     }
   
     if (!inputEl.validity.valid) {
@@ -34,9 +31,6 @@ const errorEl = document.querySelector(`.${inputEl.id}-error`);
       hideInputError(formEl, inputEl);
     }
   }; 
-
-
-   
 
   const hasInvalidInput = (inputList) => {
     // проходим по этому массиву методом some

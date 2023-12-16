@@ -13,6 +13,7 @@ const profileDescriptionValue = document.querySelector('.profile__description');
 const popup = document.querySelector('.popup');
 const formElementProfile = document.forms.edit_profile;
 const formElementCard = document.forms.new_place;
+const formElementAvatar = document.forms.avatar_name;
 const cardNameInput = document.querySelector('.popup__input_type_card-name');
 const cardUrlInput = document.querySelector('.popup__input_type_url');
 const imgLink = document.querySelector('.popup__image');
@@ -21,6 +22,8 @@ const photoAvatar = document.querySelector('.profile__image');
 const popupTypeAvatar = document.querySelector('.popup_type_avatar');
 const popupDeleteButton = document.querySelector('.card__delete-button');
 const popupTypeDelete = document.querySelector('.popup_type_delete');
+const avatarUrlInput = document.querySelector('.popup__input_type_avatar');
+
 const validationConfig = {
     formSelector: '.popup__form',
     inputSelector: '.popup__input',
@@ -29,4 +32,4 @@ const validationConfig = {
     inputErrorClass: 'popup__input_type_error',
     errorClass: 'popup__error_visible'
 }
-export { popupTypeProfile, popupTypeCard, popupTypeImage, profileEditButton, addButton, closeButton, containerEl, template, profileNameInput, profileDescriptionInput, profileNameValue,  profileDescriptionValue, popup, formElementProfile, formElementCard, cardNameInput, cardUrlInput, imgLink, imgCaption, validationConfig, photoAvatar, popupTypeAvatar, popupDeleteButton, popupTypeDelete}
+export { popupTypeProfile, popupTypeCard, popupTypeImage, profileEditButton, addButton, closeButton, containerEl, template, profileNameInput, profileDescriptionInput, profileNameValue,  profileDescriptionValue, popup, formElementProfile, formElementCard, cardNameInput, cardUrlInput, imgLink, imgCaption, validationConfig, photoAvatar, popupTypeAvatar, popupDeleteButton, popupTypeDelete, formElementAvatar, avatarUrlInput }

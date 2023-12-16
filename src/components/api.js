@@ -6,6 +6,16 @@ export const config = {
       'Content-Type': 'application/json'
     }
   }
+
+  export const setUserAvatar = (avatar) => {
+    return fetch(`${config.baseUrl}/users/me/avatar`, {
+      method: "PATCH",
+      headers: config.headers,
+      body: JSON.stringify({
+        avatar,
+      }),
+    }).then((res) => (res.ok ? res.json() : Promise.reject(res.status)));
+  }
   
   export const getInitialCards = () => {
     return fetch(`${config.baseUrl}/cards`, {
@@ -27,8 +37,10 @@ export const config = {
     return fetch(`${config.baseUrl}/cards`, {
       headers: config.headers,
       method: "POST",
-      body: JSON.stringify(data),
-      'Content-Type': 'application/json'
+      body: JSON.stringify(data),      
+        "likes": [],
+        "_id": "657c61d1995b8961bd2506d5",       
+       'Content-Type': 'application/json'
     })
       .then(res => {
         if (res.ok) {
@@ -41,3 +53,25 @@ export const config = {
 
 
   } 
+
+  export const deleteCard = (id) => {
+    return fetch(`${config.baseUrl}/cards/${id}`, {
+      method: "DELETE",
+      headers: config.headers,
+    }).then((res) => (res.ok ? res.json() : Promise.reject(res.status)));
+  }
+
+  
+ 
+    export const LikeCards = (id, isLiked) => {
+        return isLiked
+          ? fetch(`${config.baseUrl}/cards/${id}/likes`, {
+              method: "PUT",
+              headers: config.headers,
+            }).then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
+          : fetch(`${config.baseUrl}/cards/${id}/likes`, {
+              method: "DELETE",
+              headers: config.headers,
+            }).then((res) => (res.ok ? res.json() : Promise.reject(res.status)));
+      }
+    
