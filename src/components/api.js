@@ -19,20 +19,18 @@ export const getUserInfo = data => {
   });
 };
 export const saveUserInfo = data => {
-  fetch('https://nomoreparties.co/v1/wff-cohort-2/users/me', {
+  return fetch('https://nomoreparties.co/v1/wff-cohort-2/users/me', {
     method: 'PATCH',
     headers: config.headers,
     body: JSON.stringify(data)
-  });
+  }).then(res => (res.ok ? res.json() : Promise.reject(res.status)));
 };
 
 export const setUserAvatar = avatar => {
-  return fetch(`${config.baseUrl}/users/me/avatar`, {
+  return fetch('https://nomoreparties.co/v1/wff-cohort-2/users/me/avatar', {
     method: 'PATCH',
     headers: config.headers,
-    body: JSON.stringify({
-      avatar
-    })
+    body: JSON.stringify(avatar)
   }).then(res => (res.ok ? res.json() : Promise.reject(res.status)));
 };
 

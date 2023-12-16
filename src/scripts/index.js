@@ -34,7 +34,8 @@ import {
   saveCards,
   deleteCard,
   setUserAvatar,
-  getUserInfo
+  getUserInfo,
+  saveUserInfo
 } from '../components/api.js';
 
 getUserInfo().then(function (user) {
@@ -118,9 +119,9 @@ photoAvatar.addEventListener('click', function () {
 
 function handleFormAvatarSubmit(evt) {
   evt.preventDefault();
-  const newAvatar = {};
-  newAvatar.link = avatarUrlInput.value;
-  setUserAvatar(newAvatar);
+  setUserAvatar({ avatar: avatarUrlInput.value }).then(userData => {
+    photoAvatar.style = `background-image: url(${userData.avatar})`;
+  });
   closeModal(popupTypeAvatar);
   evt.target.reset();
 }
@@ -131,18 +132,25 @@ profileEditButton.addEventListener('click', openPopupProfile);
 function openPopupProfile() {
   profileNameInput.value = profileNameValue.textContent;
   profileDescriptionInput.value = profileDescriptionValue.textContent;
+
   openModal(popupTypeProfile);
 }
 
 function handleFormProfileSubmit(evt) {
-  clearValidation(formElementProfile, checkInputValidity);
-  profileNameValue.textContent = profileNameInput.value;
-  profileDescriptionValue.textContent = profileDescriptionInput.value;
-  closeModal(popupTypeProfile);
-  userInfo({
-    name: profileNameValue.textContent,
+  renderLoaiding(evt.submitter, 'Сохранение...');
+  saveUserInfo({
+    name: profileNameInput.value,
     about: profileDescriptionInput.value
-  });
+  })
+    .then(userData => {
+      console.log(userData);
+      profileNameValue.textContent = userData.name;
+      profileDescriptionValue.textContent = userData.about;
+      clearValidation(formElementProfile, checkInputValidity);
+      closeModal(popupTypeProfile);
+    })
+    .finally(() => renderLoaiding(evt.submitter, 'Сохранить'));
+
   evt.target.reset();
 }
 
@@ -181,6 +189,10 @@ enableValidation({
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup__error_visible'
 });
+
+function renderLoaiding(popupButton, status) {
+  popupButton.textContent = status;
+}
 
 export {
   popupTypeCard,
