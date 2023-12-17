@@ -22,10 +22,8 @@ import {
   avatarUrlInput,
   cardNameInput,
   cardUrlInput,
-  validationConfig,
   photoAvatar,
   popupTypeAvatar,
-  popupDeleteButton,
   popupTypeDelete
 } from '../components/constants.js';
 import { checkInputValidity, clearValidation, enableValidation } from './validation.js';
@@ -41,57 +39,23 @@ import {
 getUserInfo().then(function (user) {
   profileNameValue.textContent = user.name;
   profileDescriptionValue.textContent = user.about;
+  photoAvatar.style = `background-image: url(${user.avatar})`;
 });
+Promise.all([getInitialCards(), getUserInfo()])
+  .then(([res1, res2]) => {
+    userId = res1._id;
+    profileNameValue.textContent = res2.name;
+    profileDescriptionValue.textContent = res2.about;
+    photoAvatar.style = `background-image: url(${res2.avatar})`;
 
-// export const config = {
-//     baseUrl: 'https://nomoreparties.co/v1/wff-cohort-2',
-//     headers: {
-//       authorization: 'd588555b-0738-4ae4-bf1a-640bce42094e',
-//       'Content-Type': 'application/json'
-//     }
-//   }
-
-//   export const getInitialCards = () => {
-//     return fetch(`${config.baseUrl}/cards`, {
-//       headers: config.headers
-//     })
-//       .then(res => {
-//         if (res.ok) {
-//           return res.json();
-//         }
-
-//         // если ошибка, отклоняем промис
-//         return Promise.reject(`Ошибка: ${res.status}`);
-//       });
-
-//   }
-
-//const updateUser = (evt) => {
-//  evt.preventDefault();
-// код предыдущего спринта
-//}
-// новый спринт
-// const updateUser = (evt) => {
-//  evt.preventDefault();
-//  api.updateUser(profileFormData)
-//  .then((data) => {
-// код предыдущего спринта
-//  })
-//  .catch(console.log);
-// }
-
-//import { getInitialCards } from '../components/api.js'
-
-//getInitialCards()
-//.then(res => res.json())
-//.then((result) => {
-// console.log(result);
-//});
-// обрабатываем результат
-
-//.catch((err) => {
-// console.log(err); // выводим ошибку в консоль
-//});
+    res1.forEach(data => {
+      const listCard = createCardByTamplate(data, likeCard, userId);
+      elements.append(listCard);
+    });
+  })
+  .catch(err => {
+    console.log(err);
+  });
 
 const render = () => {
   containerEl.innerHTML = '';
@@ -119,10 +83,14 @@ photoAvatar.addEventListener('click', function () {
 
 function handleFormAvatarSubmit(evt) {
   evt.preventDefault();
-  setUserAvatar({ avatar: avatarUrlInput.value }).then(userData => {
-    photoAvatar.style = `background-image: url(${userData.avatar})`;
-  });
-  closeModal(popupTypeAvatar);
+  renderLoaiding(evt.submitter, 'Сохранение...');
+  setUserAvatar({ avatar: avatarUrlInput.value })
+    .then(userData => {
+      photoAvatar.style = `background-image: url(${userData.avatar})`;
+      closeModal(popupTypeAvatar);
+    })
+
+    .finally(() => renderLoaiding(evt.submitter, 'Сохранить'));
   evt.target.reset();
 }
 
@@ -132,7 +100,6 @@ profileEditButton.addEventListener('click', openPopupProfile);
 function openPopupProfile() {
   profileNameInput.value = profileNameValue.textContent;
   profileDescriptionInput.value = profileDescriptionValue.textContent;
-
   openModal(popupTypeProfile);
 }
 
@@ -150,7 +117,6 @@ function handleFormProfileSubmit(evt) {
       closeModal(popupTypeProfile);
     })
     .finally(() => renderLoaiding(evt.submitter, 'Сохранить'));
-
   evt.target.reset();
 }
 
@@ -158,16 +124,17 @@ formElementProfile.addEventListener('submit', handleFormProfileSubmit);
 
 function handleFormCardSubmit(evt) {
   evt.preventDefault();
+  renderLoaiding(evt.submitter, 'Сохранение...');
   const newCard = {};
   newCard.name = cardNameInput.value;
   newCard.link = cardUrlInput.value;
-  saveCards(newCard).then(function () {
-    render();
-    //const newEl = createCardByTamplate(newCard, openImage, likeCard, removeItem );
-    //containerEl.prepend(newEl);
-    closeModal(popupTypeCard);
-    evt.target.reset();
-  });
+  saveCards(newCard)
+    .then(function () {
+      render();
+      closeModal(popupTypeCard);
+    })
+    .finally(() => renderLoaiding(evt.submitter, 'Сохранить'));
+  evt.target.reset();
 }
 
 document.querySelector('.popup__button_delete').addEventListener('click', function (evt) {

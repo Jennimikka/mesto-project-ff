@@ -5,7 +5,7 @@ export const config = {
     'Content-Type': 'application/json'
   }
 };
-
+console.log(config);
 export const getUserInfo = data => {
   return fetch('https://nomoreparties.co/v1/wff-cohort-2/users/me ', {
     headers: config.headers
