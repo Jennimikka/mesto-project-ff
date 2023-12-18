@@ -7,7 +7,7 @@ export const config = {
 };
 console.log(config);
 export const getUserInfo = data => {
-  return fetch('https://nomoreparties.co/v1/wff-cohort-2/users/me ', {
+  return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers
   }).then(res => {
     if (res.ok) {
@@ -19,7 +19,7 @@ export const getUserInfo = data => {
   });
 };
 export const saveUserInfo = data => {
-  return fetch('https://nomoreparties.co/v1/wff-cohort-2/users/me', {
+  return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
     headers: config.headers,
     body: JSON.stringify(data)
@@ -27,7 +27,7 @@ export const saveUserInfo = data => {
 };
 
 export const setUserAvatar = avatar => {
-  return fetch('https://nomoreparties.co/v1/wff-cohort-2/users/me/avatar', {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
     method: 'PATCH',
     headers: config.headers,
     body: JSON.stringify(avatar)

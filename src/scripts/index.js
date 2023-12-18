@@ -1,5 +1,5 @@
 import '../pages/index.css';
-import { openModal, closeModal } from '../components/modal.js';
+import { openModal, closeModal, closePopupByClick } from '../components/modal.js';
 // import { initialCards } from '../components/cards.js';
 import { createCardByTamplate, openImage, likeCard, removeItem } from '../components/card.js';
 import {
@@ -24,7 +24,8 @@ import {
   cardUrlInput,
   photoAvatar,
   popupTypeAvatar,
-  popupTypeDelete
+  popupTypeDelete,
+  validationConfig
 } from '../components/constants.js';
 import { checkInputValidity, clearValidation, enableValidation } from './validation.js';
 import {
@@ -33,17 +34,19 @@ import {
   deleteCard,
   setUserAvatar,
   getUserInfo,
-  saveUserInfo
+  saveUserInfo,
+  config
 } from '../components/api.js';
 
-getUserInfo().then(function (user) {
-  profileNameValue.textContent = user.name;
-  profileDescriptionValue.textContent = user.about;
-  photoAvatar.style = `background-image: url(${user.avatar})`;
-});
+//getUserInfo().then(function (user) {
+//profileNameValue.textContent = user.name;
+//profileDescriptionValue.textContent = user.about;
+//photoAvatar.style = `background-image: url(${user.avatar})`;
+//});
+let userId = '';
 Promise.all([getInitialCards(), getUserInfo()])
   .then(([res1, res2]) => {
-    userId = res1._id;
+    userId = res2._id;
     profileNameValue.textContent = res2.name;
     profileDescriptionValue.textContent = res2.about;
     photoAvatar.style = `background-image: url(${res2.avatar})`;
@@ -73,6 +76,13 @@ const render = () => {
 
 render();
 
+const popups = document.querySelectorAll('.popup');
+popups.forEach(popup => {
+  popup.addEventListener('click', evt => {
+    closePopupByClick(evt);
+  });
+});
+
 addButton.addEventListener('click', function () {
   openModal(popupTypeCard);
 });
@@ -87,11 +97,12 @@ function handleFormAvatarSubmit(evt) {
   setUserAvatar({ avatar: avatarUrlInput.value })
     .then(userData => {
       photoAvatar.style = `background-image: url(${userData.avatar})`;
+      clearValidation(popupTypeAvatar, validationConfig);
       closeModal(popupTypeAvatar);
+      evt.target.reset();
     })
 
     .finally(() => renderLoaiding(evt.submitter, 'Сохранить'));
-  evt.target.reset();
 }
 
 formElementAvatar.addEventListener('submit', handleFormAvatarSubmit);
@@ -104,6 +115,7 @@ function openPopupProfile() {
 }
 
 function handleFormProfileSubmit(evt) {
+  evt.preventDefault();
   renderLoaiding(evt.submitter, 'Сохранение...');
   saveUserInfo({
     name: profileNameInput.value,
@@ -113,11 +125,11 @@ function handleFormProfileSubmit(evt) {
       console.log(userData);
       profileNameValue.textContent = userData.name;
       profileDescriptionValue.textContent = userData.about;
-      clearValidation(formElementProfile, checkInputValidity);
+      clearValidation(popupTypeProfile, validationConfig);
       closeModal(popupTypeProfile);
+      evt.target.reset();
     })
     .finally(() => renderLoaiding(evt.submitter, 'Сохранить'));
-  evt.target.reset();
 }
 
 formElementProfile.addEventListener('submit', handleFormProfileSubmit);
@@ -131,10 +143,11 @@ function handleFormCardSubmit(evt) {
   saveCards(newCard)
     .then(function () {
       render();
+      clearValidation(popupTypeCard, validationConfig);
       closeModal(popupTypeCard);
+      evt.target.reset();
     })
     .finally(() => renderLoaiding(evt.submitter, 'Сохранить'));
-  evt.target.reset();
 }
 
 document.querySelector('.popup__button_delete').addEventListener('click', function (evt) {
