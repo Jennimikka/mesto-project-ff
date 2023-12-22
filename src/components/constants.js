@@ -25,11 +25,38 @@ const popupTypeDelete = document.querySelector('.popup_type_delete');
 const avatarUrlInput = document.querySelector('.popup__input_type_avatar');
 
 const validationConfig = {
-    formSelector: '.popup__form',
-    inputSelector: '.popup__input',
-    submitButtonSelector: '.popup__button',
-    inactiveButtonClass: 'popup__button_disabled',
-    inputErrorClass: 'popup__input_type_error',
-    errorClass: 'popup__error_visible'
-}
-export { popupTypeProfile, popupTypeCard, popupTypeImage, profileEditButton, addButton, closeButton, containerEl, template, profileNameInput, profileDescriptionInput, profileNameValue,  profileDescriptionValue, popup, formElementProfile, formElementCard, cardNameInput, cardUrlInput, imgLink, imgCaption, validationConfig, photoAvatar, popupTypeAvatar, popupDeleteButton, popupTypeDelete, formElementAvatar, avatarUrlInput }
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+};
+export {
+  popupTypeProfile,
+  popupTypeCard,
+  popupTypeImage,
+  profileEditButton,
+  addButton,
+  closeButton,
+  containerEl,
+  template,
+  profileNameInput,
+  profileDescriptionInput,
+  profileNameValue,
+  profileDescriptionValue,
+  popup,
+  formElementProfile,
+  formElementCard,
+  cardNameInput,
+  cardUrlInput,
+  imgLink,
+  imgCaption,
+  validationConfig,
+  photoAvatar,
+  popupTypeAvatar,
+  popupDeleteButton,
+  popupTypeDelete,
+  formElementAvatar,
+  avatarUrlInput
+};

@@ -2,7 +2,8 @@ import { template, imgLink, imgCaption, popupTypeDelete } from './constants.js';
 import { openModal } from './modal.js';
 import { popupTypeImage } from './constants.js';
 import { likeCards } from './api.js';
-export const createCardByTamplate = (item, openImage, likeCard, removeItem) => {
+import { userId } from '../scripts/index.js';
+export const createCardByTamplate = (item, openImage, likeCard) => {
   const el = template.querySelector('.card').cloneNode(true);
   el.setAttribute('id', 'card-' + item._id);
   const elTitle = el.querySelector('.card__title');
@@ -17,16 +18,16 @@ export const createCardByTamplate = (item, openImage, likeCard, removeItem) => {
     openImage(item);
   });
   const deleteBtn = el.querySelector('.card__delete-button');
-  if (item.owner._id == '9340354ff2504a42f96423f0') {
+  if (item.owner._id == userId) {
     //Показываем кнопку удаления
     deleteBtn.style.display = 'block';
-    deleteBtn.addEventListener('click', removeItem);
+    deleteBtn.addEventListener('click', openPopupDelite);
     deleteBtn.dataset.id = item._id;
   } else {
     deleteBtn.style.display = 'none';
   }
   el.querySelector('.card__like-counter').innerText = item.likes.length;
-  let myLike = item.likes.find(user => user._id == '9340354ff2504a42f96423f0');
+  const myLike = item.likes.some(user => user._id == userId);
   if (myLike) {
     elLike.classList.add('card__like-button_is-active');
   }
@@ -43,21 +44,22 @@ export function openImage(item) {
 export function likeCard(evt) {
   evt.preventDefault();
   let countLikes = evt.target.parentNode.parentNode.querySelector('.card__like-counter');
-  if (evt.target.classList.contains('card__like-button_is-active')) {
-    // Убираем
-    evt.target.classList.remove('card__like-button_is-active');
-    countLikes.innerText = Number(countLikes.innerText) - 1;
-    likeCards(evt.target.dataset.id, false);
-  } else {
-    // Добавляем
-    evt.target.classList.add('card__like-button_is-active');
-    countLikes.innerText = Number(countLikes.innerText) + 1;
-    likeCards(evt.target.dataset.id, true);
-  }
+  likeCards(evt.target.dataset.id, !evt.target.classList.contains('card__like-button_is-active'))
+    .then(res => {
+      countLikes.innerText = res.likes.length;
+      evt.target.classList.toggle('card__like-button_is-active');
+    })
+    .catch(err => {
+      console.log(err); // выводим ошибку в консоль
+    });
 }
 
-export function removeItem(evt) {
+export function openPopupDelite(evt) {
   evt.preventDefault();
   openModal(popupTypeDelete);
   document.querySelector('.popup__button_delete').dataset.id = evt.target.dataset.id;
+}
+
+export function removeCard(id) {
+  document.querySelector('#card-' + id).remove();
 }

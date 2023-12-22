@@ -1,7 +1,7 @@
 import '../pages/index.css';
 import { openModal, closeModal, closePopupByClick } from '../components/modal.js';
 // import { initialCards } from '../components/cards.js';
-import { createCardByTamplate, openImage, likeCard, removeItem } from '../components/card.js';
+import { createCardByTamplate, openImage, likeCard, removeCard } from '../components/card.js';
 import {
   popupTypeProfile,
   popupTypeCard,
@@ -9,6 +9,7 @@ import {
   profileEditButton,
   addButton,
   closeButton,
+  popupDeleteButton,
   containerEl,
   template,
   profileNameInput,
@@ -66,7 +67,7 @@ const render = () => {
     .then(cards => {
       console.log(cards);
       cards.forEach(item => {
-        containerEl.append(createCardByTamplate(item, openImage, likeCard, removeItem));
+        containerEl.append(createCardByTamplate(item, openImage, likeCard));
       });
     })
     .catch(err => {
@@ -85,10 +86,12 @@ popups.forEach(popup => {
 
 addButton.addEventListener('click', function () {
   openModal(popupTypeCard);
+  clearValidation(popupTypeCard, validationConfig);
 });
 
 photoAvatar.addEventListener('click', function () {
   openModal(popupTypeAvatar);
+  clearValidation(popupTypeAvatar, validationConfig);
 });
 
 function handleFormAvatarSubmit(evt) {
@@ -97,7 +100,6 @@ function handleFormAvatarSubmit(evt) {
   setUserAvatar({ avatar: avatarUrlInput.value })
     .then(userData => {
       photoAvatar.style = `background-image: url(${userData.avatar})`;
-      clearValidation(popupTypeAvatar, validationConfig);
       closeModal(popupTypeAvatar);
       evt.target.reset();
     })
@@ -112,6 +114,7 @@ function openPopupProfile() {
   profileNameInput.value = profileNameValue.textContent;
   profileDescriptionInput.value = profileDescriptionValue.textContent;
   openModal(popupTypeProfile);
+  clearValidation(popupTypeProfile, validationConfig);
 }
 
 function handleFormProfileSubmit(evt) {
@@ -125,7 +128,6 @@ function handleFormProfileSubmit(evt) {
       console.log(userData);
       profileNameValue.textContent = userData.name;
       profileDescriptionValue.textContent = userData.about;
-      clearValidation(popupTypeProfile, validationConfig);
       closeModal(popupTypeProfile);
       evt.target.reset();
     })
@@ -143,20 +145,23 @@ function handleFormCardSubmit(evt) {
   saveCards(newCard)
     .then(function () {
       render();
-      clearValidation(popupTypeCard, validationConfig);
       closeModal(popupTypeCard);
       evt.target.reset();
     })
     .finally(() => renderLoaiding(evt.submitter, 'Сохранить'));
 }
 
+// popupDeleteButton.addEventListener('click', () => {
+//   openModal(popupTypeDelete);
+// });
+
 document.querySelector('.popup__button_delete').addEventListener('click', function (evt) {
   evt.preventDefault();
-  let id = evt.target.dataset.id;
-  document.querySelector('#card-' + id).remove();
-  closeModal(popupTypeDelete);
-  deleteCard(id);
-  //сделать отправку на сервер удаление.
+  const id = evt.target.dataset.id;
+  deleteCard(id).then(() => {
+    removeCard(id);
+    closeModal(popupTypeDelete);
+  });
 });
 
 formElementCard.addEventListener('submit', handleFormCardSubmit);
@@ -184,7 +189,8 @@ export {
   popup,
   containerEl,
   template,
-  openModal
+  openModal,
+  userId
 };
 
 // @todo: DOM узлы

@@ -1,20 +1,20 @@
 import { validationConfig } from '../components/constants.js';
-export const showInputError = (formEl, inputEl, errorMessage) => {
+export const showInputError = (formEl, inputEl, errorMessage, validationConfig) => {
   const errorEl = formEl.querySelector(`#${inputEl.id}-error`);
-  inputEl.classList.add('popup__input_type_error');
+  inputEl.classList.add(validationConfig.inputErrorClass);
   errorEl.textContent = errorMessage;
-  errorEl.classList.add('popup__error_visible');
+  errorEl.classList.add(validationConfig.errorClass);
 };
 console.log(showInputError);
-export const hideInputError = (formEl, inputEl) => {
+export const hideInputError = (formEl, inputEl, validationConfig) => {
   console.log(inputEl.id);
   const errorEl = formEl.querySelector(`#${inputEl.id}-error`);
-  inputEl.classList.remove('popup__input_type_error');
-  errorEl.classList.remove('popup__error_visible');
+  inputEl.classList.remove(validationConfig.inputErrorClass);
+  errorEl.classList.remove(validationConfig.errorClass);
   errorEl.textContent = '';
 };
 
-export const checkInputValidity = (formEl, inputEl) => {
+export const checkInputValidity = (formEl, inputEl, validationConfig) => {
   if (inputEl.validity.patternMismatch) {
     inputEl.setCustomValidity(inputEl.dataset.errorMessage);
   } else {
@@ -22,9 +22,9 @@ export const checkInputValidity = (formEl, inputEl) => {
   }
 
   if (!inputEl.validity.valid) {
-    showInputError(formEl, inputEl, inputEl.validationMessage);
+    showInputError(formEl, inputEl, inputEl.validationMessage, validationConfig);
   } else {
-    hideInputError(formEl, inputEl);
+    hideInputError(formEl, inputEl, validationConfig);
   }
 };
 
@@ -39,30 +39,30 @@ const hasInvalidInput = inputList => {
   });
 };
 
-const toggleButtonState = (inputList, buttonEl) => {
+const toggleButtonState = (inputList, buttonEl, validationConfig) => {
   // Если есть хотя бы один невалидный инпут
   if (hasInvalidInput(inputList)) {
     // сделай кнопку неактивной
     buttonEl.disabled = true;
-    buttonEl.classList.add('popup__button_disabled');
+    buttonEl.classList.add(validationConfig.inactiveButtonClass);
   } else {
     // иначе сделай кнопку активной
     buttonEl.disabled = false;
-    buttonEl.classList.remove('popup__button_disabled');
+    buttonEl.classList.remove(validationConfig.inactiveButtonClass);
   }
 };
 const setEventListeners = formEl => {
   // Найдём все поля формы и сделаем из них массив
-  const inputList = Array.from(formEl.querySelectorAll('.popup__input'));
+  const inputList = Array.from(formEl.querySelectorAll(validationConfig.inputSelector));
   // Найдём в текущей форме кнопку отправки
-  const buttonEl = formEl.querySelector('.popup__button');
+  const buttonEl = formEl.querySelector(validationConfig.submitButtonSelector);
 
   inputList.forEach(inputEl => {
     inputEl.addEventListener('input', () => {
-      checkInputValidity(formEl, inputEl);
+      checkInputValidity(formEl, inputEl, validationConfig);
 
       // Вызовем toggleButtonState и передадим ей массив полей и кнопку
-      toggleButtonState(inputList, buttonEl);
+      toggleButtonState(inputList, buttonEl, validationConfig);
     });
   });
 };
@@ -79,14 +79,13 @@ export function clearValidation(formEl, validationConfig) {
     button.classList.add(validationConfig.inactiveButtonClass);
   });
 }
-export const enableValidation = () => {
-  const formList = Array.from(document.querySelectorAll('.popup__form'));
 
-  // Переберём полученную коллекцию
+export const enableValidation = validationConfig => {
+  const formList = document.querySelectorAll(validationConfig.formSelector);
   formList.forEach(formEl => {
-    formEl.addEventListener('submit', evt => {
+    formEl.addEventListener('submit', function (evt) {
       evt.preventDefault();
     });
-    setEventListeners(formEl);
+    setEventListeners(formEl, validationConfig);
   });
 };
