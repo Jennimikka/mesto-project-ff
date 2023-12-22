@@ -9,7 +9,6 @@ import {
   profileEditButton,
   addButton,
   closeButton,
-  popupDeleteButton,
   containerEl,
   template,
   profileNameInput,
@@ -28,7 +27,7 @@ import {
   popupTypeDelete,
   validationConfig
 } from '../components/constants.js';
-import { checkInputValidity, clearValidation, enableValidation } from './validation.js';
+import { clearValidation, enableValidation } from './validation.js';
 import {
   getInitialCards,
   saveCards,
@@ -39,11 +38,6 @@ import {
   config
 } from '../components/api.js';
 
-//getUserInfo().then(function (user) {
-//profileNameValue.textContent = user.name;
-//profileDescriptionValue.textContent = user.about;
-//photoAvatar.style = `background-image: url(${user.avatar})`;
-//});
 let userId = '';
 Promise.all([getInitialCards(), getUserInfo()])
   .then(([res1, res2]) => {
@@ -150,10 +144,6 @@ function handleFormCardSubmit(evt) {
     })
     .finally(() => renderLoaiding(evt.submitter, 'Сохранить'));
 }
-
-// popupDeleteButton.addEventListener('click', () => {
-//   openModal(popupTypeDelete);
-// });
 
 document.querySelector('.popup__button_delete').addEventListener('click', function (evt) {
   evt.preventDefault();
