@@ -6,24 +6,20 @@ export const config = {
   }
 };
 console.log(config);
+
+const handleResponse = res => (res.ok ? res.json() : Promise.reject(res.status));
+
 export const getUserInfo = data => {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers
-  }).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-
-    // если ошибка, отклоняем промис
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(handleResponse);
 };
 export const saveUserInfo = data => {
   return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
     headers: config.headers,
     body: JSON.stringify(data)
-  }).then(res => (res.ok ? res.json() : Promise.reject(res.status)));
+  }).then(handleResponse);
 };
 
 export const setUserAvatar = avatar => {
@@ -31,20 +27,13 @@ export const setUserAvatar = avatar => {
     method: 'PATCH',
     headers: config.headers,
     body: JSON.stringify(avatar)
-  }).then(res => (res.ok ? res.json() : Promise.reject(res.status)));
+  }).then(handleResponse);
 };
 
 export const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
-  }).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-
-    // если ошибка, отклоняем промис
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(handleResponse);
 };
 
 export const saveCards = data => {
@@ -55,21 +44,14 @@ export const saveCards = data => {
     likes: [],
     _id: '657c61d1995b8961bd2506d5',
     'Content-Type': 'application/json'
-  }).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-
-    // если ошибка, отклоняем промис
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(handleResponse);
 };
 
 export const deleteCard = id => {
   return fetch(`${config.baseUrl}/cards/${id}`, {
     method: 'DELETE',
     headers: config.headers
-  }).then(res => (res.ok ? res.json() : Promise.reject(res.status)));
+  }).then(handleResponse);
 };
 
 export const likeCards = (id, isLiked) => {
@@ -81,5 +63,5 @@ export const likeCards = (id, isLiked) => {
     : fetch(`${config.baseUrl}/cards/${id}/likes`, {
         method: 'DELETE',
         headers: config.headers
-      }).then(res => (res.ok ? res.json() : Promise.reject(res.status)));
+      }).then(handleResponse);
 };

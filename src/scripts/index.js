@@ -1,7 +1,7 @@
 import '../pages/index.css';
 import { openModal, closeModal, closePopupByClick } from '../components/modal.js';
 // import { initialCards } from '../components/cards.js';
-import { createCardByTamplate, openImage, likeCard, removeCard } from '../components/card.js';
+import { createCardByTamplate, likeCard, removeCard } from '../components/card.js';
 import {
   popupTypeProfile,
   popupTypeCard,
@@ -25,7 +25,10 @@ import {
   photoAvatar,
   popupTypeAvatar,
   popupTypeDelete,
-  validationConfig
+  validationConfig,
+  imgLink,
+  imgCaption,
+  popupDeleteButton
 } from '../components/constants.js';
 import { clearValidation, enableValidation } from './validation.js';
 import {
@@ -34,8 +37,7 @@ import {
   deleteCard,
   setUserAvatar,
   getUserInfo,
-  saveUserInfo,
-  config
+  saveUserInfo
 } from '../components/api.js';
 
 let userId = '';
@@ -47,21 +49,20 @@ Promise.all([getInitialCards(), getUserInfo()])
     photoAvatar.style = `background-image: url(${res2.avatar})`;
 
     res1.forEach(data => {
-      const listCard = createCardByTamplate(data, likeCard, userId);
-      elements.append(listCard);
+      const listCard = createCardByTamplate(data, openImage, likeCard, userId);
+      containerEl.append(listCard);
     });
   })
   .catch(err => {
     console.log(err);
   });
-
 const render = () => {
   containerEl.innerHTML = '';
   getInitialCards()
     .then(cards => {
       console.log(cards);
       cards.forEach(item => {
-        containerEl.append(createCardByTamplate(item, openImage, likeCard));
+        containerEl.append(createCardByTamplate(item, openImage, likeCard, userId));
       });
     })
     .catch(err => {
@@ -105,10 +106,10 @@ formElementAvatar.addEventListener('submit', handleFormAvatarSubmit);
 
 profileEditButton.addEventListener('click', openPopupProfile);
 function openPopupProfile() {
+  clearValidation(popupTypeProfile, validationConfig);
   profileNameInput.value = profileNameValue.textContent;
   profileDescriptionInput.value = profileDescriptionValue.textContent;
   openModal(popupTypeProfile);
-  clearValidation(popupTypeProfile, validationConfig);
 }
 
 function handleFormProfileSubmit(evt) {
@@ -143,6 +144,19 @@ function handleFormCardSubmit(evt) {
       evt.target.reset();
     })
     .finally(() => renderLoaiding(evt.submitter, 'Сохранить'));
+}
+
+function openImage(item) {
+  imgLink.src = item.link;
+  imgLink.alt = item.name;
+  imgCaption.textContent = item.name;
+  openModal(popupTypeImage);
+}
+
+function openPopupDelete(evt) {
+  evt.preventDefault();
+  openModal(popupTypeDelete);
+  document.querySelector('.popup__button_delete').dataset.id = evt.target.dataset.id;
 }
 
 document.querySelector('.popup__button_delete').addEventListener('click', function (evt) {
@@ -180,7 +194,9 @@ export {
   containerEl,
   template,
   openModal,
-  userId
+  userId,
+  openImage,
+  openPopupDelete
 };
 
 // @todo: DOM узлы

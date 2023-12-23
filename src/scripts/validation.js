@@ -1,11 +1,11 @@
-import { validationConfig } from '../components/constants.js';
+//import { validationConfig } from '../components/constants.js';
 export const showInputError = (formEl, inputEl, errorMessage, validationConfig) => {
   const errorEl = formEl.querySelector(`#${inputEl.id}-error`);
   inputEl.classList.add(validationConfig.inputErrorClass);
   errorEl.textContent = errorMessage;
   errorEl.classList.add(validationConfig.errorClass);
 };
-console.log(showInputError);
+
 export const hideInputError = (formEl, inputEl, validationConfig) => {
   console.log(inputEl.id);
   const errorEl = formEl.querySelector(`#${inputEl.id}-error`);
@@ -51,7 +51,7 @@ const toggleButtonState = (inputList, buttonEl, validationConfig) => {
     buttonEl.classList.remove(validationConfig.inactiveButtonClass);
   }
 };
-const setEventListeners = formEl => {
+const setEventListeners = (formEl, validationConfig) => {
   // Найдём все поля формы и сделаем из них массив
   const inputList = Array.from(formEl.querySelectorAll(validationConfig.inputSelector));
   // Найдём в текущей форме кнопку отправки
@@ -68,16 +68,16 @@ const setEventListeners = formEl => {
 };
 
 export function clearValidation(formEl, validationConfig) {
-  const formList = Array.from(formEl.querySelectorAll(validationConfig.inputSelector));
+  const inputList = Array.from(formEl.querySelectorAll(validationConfig.inputSelector));
   const button = formEl.querySelector(validationConfig.submitButtonSelector);
-  formList.forEach((inputEl, validationConfig) => {
+  inputList.forEach((inputEl, validationConfig) => {
     hideInputError(formEl, inputEl, validationConfig);
-    formEl.addEventListener('submit', evt => {
-      evt.target.reset();
-    });
-
-    button.classList.add(validationConfig.inactiveButtonClass);
   });
+
+  const form = formEl.querySelector(validationConfig.formSelector);
+  form.reset();
+  toggleButtonState(inputList, button, validationConfig);
+  //button.classList.add(validationConfig.inactiveButtonClass);
 }
 
 export const enableValidation = validationConfig => {

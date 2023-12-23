@@ -1,9 +1,10 @@
-import { template, imgLink, imgCaption, popupTypeDelete } from './constants.js';
-import { openModal } from './modal.js';
-import { popupTypeImage } from './constants.js';
+import { template } from './constants.js';
+//import { openModal } from './modal.js';
+//import { popupTypeImage } from './constants.js';
 import { likeCards } from './api.js';
-import { userId } from '../scripts/index.js';
-export const createCardByTamplate = (item, openImage, likeCard) => {
+import { openPopupDelete } from '../scripts/index.js';
+
+export const createCardByTamplate = (item, openImage, likeCard, userId) => {
   const el = template.querySelector('.card').cloneNode(true);
   el.setAttribute('id', 'card-' + item._id);
   const elTitle = el.querySelector('.card__title');
@@ -21,12 +22,13 @@ export const createCardByTamplate = (item, openImage, likeCard) => {
   if (item.owner._id == userId) {
     //Показываем кнопку удаления
     deleteBtn.style.display = 'block';
-    deleteBtn.addEventListener('click', openPopupDelite);
+    deleteBtn.addEventListener('click', openPopupDelete);
     deleteBtn.dataset.id = item._id;
   } else {
     deleteBtn.style.display = 'none';
   }
   el.querySelector('.card__like-counter').innerText = item.likes.length;
+  console.log(456, item.likes, userId);
   const myLike = item.likes.some(user => user._id == userId);
   if (myLike) {
     elLike.classList.add('card__like-button_is-active');
@@ -34,16 +36,9 @@ export const createCardByTamplate = (item, openImage, likeCard) => {
   return el;
 };
 
-export function openImage(item) {
-  imgLink.src = item.link;
-  imgLink.alt = item.name;
-  imgCaption.textContent = item.name;
-  openModal(popupTypeImage);
-}
-
 export function likeCard(evt) {
   evt.preventDefault();
-  let countLikes = evt.target.parentNode.parentNode.querySelector('.card__like-counter');
+  const countLikes = evt.target.parentNode.parentNode.querySelector('.card__like-counter');
   likeCards(evt.target.dataset.id, !evt.target.classList.contains('card__like-button_is-active'))
     .then(res => {
       countLikes.innerText = res.likes.length;
@@ -54,12 +49,8 @@ export function likeCard(evt) {
     });
 }
 
-export function openPopupDelite(evt) {
-  evt.preventDefault();
-  openModal(popupTypeDelete);
-  document.querySelector('.popup__button_delete').dataset.id = evt.target.dataset.id;
-}
-
 export function removeCard(id) {
   document.querySelector('#card-' + id).remove();
 }
+//почему кнопки удаления загружаются позже всего остального
+//как removeCard и клик по кнопке урны перенести в index.js из card

@@ -1,13 +1,3 @@
-import {
-  popupTypeCard,
-  popupTypeProfile,
-  popupTypeImage,
-  profileEditButton,
-  addButton,
-  closeButton,
-  popup
-} from '../scripts/index.js';
-
 export const closePopupByClick = evt => {
   if (evt.target === evt.currentTarget || evt.target.classList.contains('popup__close')) {
     closeModal(evt.currentTarget);
