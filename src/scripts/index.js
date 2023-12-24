@@ -1,7 +1,7 @@
 import '../pages/index.css';
 import { openModal, closeModal, closePopupByClick } from '../components/modal.js';
 // import { initialCards } from '../components/cards.js';
-import { createCardByTamplate, likeCard, removeCard } from '../components/card.js';
+import { createCardByTamplate, likeCard, eraseCard } from '../components/card.js';
 import {
   popupTypeProfile,
   popupTypeCard,
@@ -49,7 +49,7 @@ Promise.all([getInitialCards(), getUserInfo()])
     photoAvatar.style = `background-image: url(${res2.avatar})`;
 
     res1.forEach(data => {
-      const listCard = createCardByTamplate(data, openImage, likeCard, userId);
+      const listCard = createCardByTamplate(data, openImage, likeCard, removeCard, userId);
       containerEl.append(listCard);
     });
   })
@@ -62,7 +62,7 @@ const render = () => {
     .then(cards => {
       console.log(cards);
       cards.forEach(item => {
-        containerEl.append(createCardByTamplate(item, openImage, likeCard, userId));
+        containerEl.append(createCardByTamplate(item, openImage, likeCard, removeCard, userId));
       });
     })
     .catch(err => {
@@ -70,7 +70,7 @@ const render = () => {
     });
 };
 
-render();
+// render();
 
 const popups = document.querySelectorAll('.popup');
 popups.forEach(popup => {
@@ -153,7 +153,7 @@ function openImage(item) {
   openModal(popupTypeImage);
 }
 
-function openPopupDelete(evt) {
+function removeCard(evt) {
   evt.preventDefault();
   openModal(popupTypeDelete);
   document.querySelector('.popup__button_delete').dataset.id = evt.target.dataset.id;
@@ -163,7 +163,7 @@ document.querySelector('.popup__button_delete').addEventListener('click', functi
   evt.preventDefault();
   const id = evt.target.dataset.id;
   deleteCard(id).then(() => {
-    removeCard(id);
+    eraseCard(id);
     closeModal(popupTypeDelete);
   });
 });
@@ -195,8 +195,7 @@ export {
   template,
   openModal,
   userId,
-  openImage,
-  openPopupDelete
+  openImage
 };
 
 // @todo: DOM узлы

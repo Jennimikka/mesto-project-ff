@@ -2,9 +2,8 @@ import { template } from './constants.js';
 //import { openModal } from './modal.js';
 //import { popupTypeImage } from './constants.js';
 import { likeCards } from './api.js';
-import { openPopupDelete } from '../scripts/index.js';
 
-export const createCardByTamplate = (item, openImage, likeCard, userId) => {
+export const createCardByTamplate = (item, openImage, likeCard, removeCard, userId) => {
   const el = template.querySelector('.card').cloneNode(true);
   el.setAttribute('id', 'card-' + item._id);
   const elTitle = el.querySelector('.card__title');
@@ -22,7 +21,7 @@ export const createCardByTamplate = (item, openImage, likeCard, userId) => {
   if (item.owner._id == userId) {
     //Показываем кнопку удаления
     deleteBtn.style.display = 'block';
-    deleteBtn.addEventListener('click', openPopupDelete);
+    deleteBtn.addEventListener('click', removeCard);
     deleteBtn.dataset.id = item._id;
   } else {
     deleteBtn.style.display = 'none';
@@ -49,8 +48,9 @@ export function likeCard(evt) {
     });
 }
 
-export function removeCard(id) {
+export function eraseCard(id) {
   document.querySelector('#card-' + id).remove();
 }
 //почему кнопки удаления загружаются позже всего остального
 //как removeCard и клик по кнопке урны перенести в index.js из card
+// почему в яндекс браузере валидация криво работает при открытии попапов, а в хроме и на локальном норм все
